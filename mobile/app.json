@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "Event Plus",
+    "slug": "eventplus-mobile",
+    "scheme": "eventplus",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A0A0A"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.eventplus.accounting",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSAllowsLocalNetworking": true
+        },
+        "CFBundleLocalizations": ["en", "ar"],
+        "CFBundleDevelopmentRegion": "ar"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A0A0A"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.eventplus.accounting",
+      "versionCode": 1
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "apiUrl": "http://192.168.8.205:8000/api",
+      "eas": {
+        "projectId": "PLACEHOLDER_WILL_BE_SET_BY_EAS_INIT"
+      }
+    },
+    "owner": "YOUR_EXPO_USERNAME"
+  }
+}

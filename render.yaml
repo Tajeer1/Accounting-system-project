@@ -1,0 +1,63 @@
+services:
+  - type: web
+    name: eventplus-backend
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_NAME
+        value: "Event Plus"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        sync: false
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: warning
+
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: eventplus-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: eventplus-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: eventplus-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: eventplus-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: eventplus-db
+          property: password
+
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+
+      - key: FRESH_DB
+        value: "true"
+
+databases:
+  - name: eventplus-db
+    plan: free
+    region: frankfurt
+    databaseName: eventplus
+    user: eventplus
