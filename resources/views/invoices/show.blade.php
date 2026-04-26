@@ -61,6 +61,20 @@
                     </form>
                 @endif
             </div>
+
+            <div class="px-4 pb-4 border-t border-slate-100 pt-3" x-data="{ open: false }">
+                <button @click="open = !open" type="button" class="text-xs font-medium text-indigo-600 hover:text-indigo-700">
+                    📱 إرسال إشعار SMS للعميل
+                </button>
+                <form method="POST" action="{{ route('invoices.sms', $invoice) }}" x-show="open" x-cloak class="mt-3 flex gap-2" @click.stop>
+                    @csrf
+                    <input type="tel" name="to" placeholder="+96898765432" required dir="ltr"
+                           class="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    <button type="submit" class="px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        إرسال
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 

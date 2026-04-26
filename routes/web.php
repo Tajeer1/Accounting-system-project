@@ -8,6 +8,7 @@ use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SmsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -29,6 +30,10 @@ Route::post('journal-entries/{journal_entry}/post', [JournalEntryController::cla
 Route::resource('chart-of-accounts', ChartOfAccountController::class);
 
 Route::resource('projects', ProjectController::class);
+
+Route::get('sms', [SmsController::class, 'index'])->name('sms.index');
+Route::post('sms/send', [SmsController::class, 'send'])->name('sms.send');
+Route::post('invoices/{invoice}/sms', [SmsController::class, 'sendInvoiceNotification'])->name('invoices.sms');
 
 Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
 Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');

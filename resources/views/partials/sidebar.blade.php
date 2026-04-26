@@ -7,6 +7,7 @@
         ['label' => 'القيود اليومية', 'route' => 'journal-entries.index', 'icon' => 'book'],
         ['label' => 'شجرة الحسابات', 'route' => 'chart-of-accounts.index', 'icon' => 'tree'],
         ['label' => 'المشاريع', 'route' => 'projects.index', 'icon' => 'briefcase'],
+        ['label' => 'الرسائل (SMS)', 'route' => 'sms.index', 'icon' => 'invoice'],
         ['label' => 'الإعدادات', 'route' => 'settings.index', 'icon' => 'cog'],
     ];
 @endphp
