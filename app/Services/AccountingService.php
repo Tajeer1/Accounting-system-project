@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\BankAccount;
+use App\Models\BankTransaction;
 use App\Models\ChartOfAccount;
 use App\Models\Invoice;
 use App\Models\JournalEntry;
@@ -136,6 +137,72 @@ class AccountingService
             if ($invoice->bankAccount) {
                 $invoice->bankAccount->recalculateBalance();
             }
+
+            return $entry;
+        });
+    }
+
+    public function createEntryForBankTransaction(BankTransaction $tx): ?JournalEntry
+    {
+        if ($tx->transaction_type === 'unknown' || $tx->amount <= 0) {
+            return null;
+        }
+
+        $cashAccount = $this->accountByCode('1100');
+        $expenseAccount = $tx->chartOfAccount ?? $this->accountByCode('5100');
+        $revenueAccount = $tx->chartOfAccount ?? $this->accountByCode('4100');
+
+        if (! $cashAccount || ! $expenseAccount || ! $revenueAccount) {
+            return null;
+        }
+
+        return DB::transaction(function () use ($tx, $cashAccount, $expenseAccount, $revenueAccount) {
+            $tx->journalEntry()?->delete();
+
+            $entryDate = $tx->transaction_datetime?->toDateString() ?? now()->toDateString();
+            $reference = 'BT-' . $tx->id;
+            $description = ($tx->bank_name ? $tx->bank_name . ' — ' : '') . ($tx->description ?? '');
+
+            $entry = JournalEntry::create([
+                'number' => JournalEntry::generateNumber(),
+                'entry_date' => $entryDate,
+                'reference' => $reference,
+                'description' => mb_substr($description, 0, 1000),
+                'status' => 'posted',
+                'source_type' => BankTransaction::class,
+                'source_id' => $tx->id,
+                'project_id' => $tx->project_id,
+            ]);
+
+            if ($tx->transaction_type === 'debit') {
+                $entry->lines()->create([
+                    'account_id' => $expenseAccount->id,
+                    'debit' => $tx->amount,
+                    'credit' => 0,
+                    'notes' => $tx->description,
+                ]);
+                $entry->lines()->create([
+                    'account_id' => $cashAccount->id,
+                    'debit' => 0,
+                    'credit' => $tx->amount,
+                    'notes' => 'خصم بنكي — ' . ($tx->masked_account_number ?? ''),
+                ]);
+            } else {
+                $entry->lines()->create([
+                    'account_id' => $cashAccount->id,
+                    'debit' => $tx->amount,
+                    'credit' => 0,
+                    'notes' => 'إيداع بنكي — ' . ($tx->masked_account_number ?? ''),
+                ]);
+                $entry->lines()->create([
+                    'account_id' => $revenueAccount->id,
+                    'debit' => 0,
+                    'credit' => $tx->amount,
+                    'notes' => $tx->description,
+                ]);
+            }
+
+            $entry->recalculateTotals();
 
             return $entry;
         });
