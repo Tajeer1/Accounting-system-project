@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\BankEmailIntegrationController;
+use App\Http\Controllers\BankEmailMessageController;
+use App\Http\Controllers\BankTransactionController;
 use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
@@ -34,6 +37,29 @@ Route::resource('projects', ProjectController::class);
 Route::get('sms', [SmsController::class, 'index'])->name('sms.index');
 Route::post('sms/send', [SmsController::class, 'send'])->name('sms.send');
 Route::post('invoices/{invoice}/sms', [SmsController::class, 'sendInvoiceNotification'])->name('invoices.sms');
+
+Route::prefix('bank-emails')->name('bank-emails.')->group(function () {
+    Route::get('integrations', [BankEmailIntegrationController::class, 'index'])->name('integrations.index');
+    Route::get('integrations/create', [BankEmailIntegrationController::class, 'create'])->name('integrations.create');
+    Route::post('integrations', [BankEmailIntegrationController::class, 'store'])->name('integrations.store');
+    Route::get('integrations/{integration}', [BankEmailIntegrationController::class, 'show'])->name('integrations.show');
+    Route::get('integrations/{integration}/edit', [BankEmailIntegrationController::class, 'edit'])->name('integrations.edit');
+    Route::put('integrations/{integration}', [BankEmailIntegrationController::class, 'update'])->name('integrations.update');
+    Route::delete('integrations/{integration}', [BankEmailIntegrationController::class, 'destroy'])->name('integrations.destroy');
+    Route::post('integrations/{integration}/test', [BankEmailIntegrationController::class, 'testConnection'])->name('integrations.test');
+    Route::post('integrations/{integration}/sync', [BankEmailIntegrationController::class, 'sync'])->name('integrations.sync');
+
+    Route::get('transactions', [BankTransactionController::class, 'index'])->name('transactions.index');
+    Route::get('transactions/review', [BankTransactionController::class, 'review'])->name('transactions.review');
+    Route::get('transactions/{transaction}', [BankTransactionController::class, 'show'])->name('transactions.show');
+    Route::put('transactions/{transaction}', [BankTransactionController::class, 'update'])->name('transactions.update');
+    Route::post('transactions/{transaction}/confirm', [BankTransactionController::class, 'confirm'])->name('transactions.confirm');
+    Route::post('transactions/{transaction}/ignore', [BankTransactionController::class, 'ignore'])->name('transactions.ignore');
+    Route::delete('transactions/{transaction}', [BankTransactionController::class, 'destroy'])->name('transactions.destroy');
+
+    Route::get('messages', [BankEmailMessageController::class, 'index'])->name('messages.index');
+    Route::get('messages/{message}', [BankEmailMessageController::class, 'show'])->name('messages.show');
+});
 
 Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
 Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
