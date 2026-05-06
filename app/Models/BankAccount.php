@@ -10,6 +10,7 @@ class BankAccount extends Model
     protected $fillable = [
         'name', 'type', 'account_number', 'opening_balance',
         'current_balance', 'currency', 'notes', 'is_active',
+        'email_bank_key', 'email_match_sender',
     ];
 
     protected $casts = [
@@ -42,6 +43,11 @@ class BankAccount extends Model
     public function transfersIn(): HasMany
     {
         return $this->hasMany(AccountTransfer::class, 'to_account_id');
+    }
+
+    public function bankTransactions(): HasMany
+    {
+        return $this->hasMany(BankTransaction::class);
     }
 
     public function typeLabel(): string

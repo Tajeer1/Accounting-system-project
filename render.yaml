@@ -55,6 +55,14 @@ services:
       - key: FRESH_DB
         value: "true"
 
+      # Gmail OAuth — set actual values in Render dashboard (Environment tab)
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
+
 databases:
   - name: eventplus-db
     plan: free

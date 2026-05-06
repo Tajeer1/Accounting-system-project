@@ -8,6 +8,8 @@
         ['label' => 'شجرة الحسابات', 'route' => 'chart-of-accounts.index', 'icon' => 'tree'],
         ['label' => 'المشاريع', 'route' => 'projects.index', 'icon' => 'briefcase'],
         ['label' => 'الرسائل (SMS)', 'route' => 'sms.index', 'icon' => 'invoice'],
+        ['label' => 'إيميلات البنك', 'route' => 'bank-emails.index', 'icon' => 'mail'],
+        ['label' => 'العمليات البنكية', 'route' => 'bank-transactions.index', 'icon' => 'dollar'],
         ['label' => 'الإعدادات', 'route' => 'settings.index', 'icon' => 'cog'],
     ];
 @endphp

@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\BankEmailController;
+use App\Http\Controllers\BankTransactionController;
 use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GmailAuthController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\ProjectController;
@@ -34,6 +37,27 @@ Route::resource('projects', ProjectController::class);
 Route::get('sms', [SmsController::class, 'index'])->name('sms.index');
 Route::post('sms/send', [SmsController::class, 'send'])->name('sms.send');
 Route::post('invoices/{invoice}/sms', [SmsController::class, 'sendInvoiceNotification'])->name('invoices.sms');
+
+// Gmail OAuth
+Route::get('gmail/connect', [GmailAuthController::class, 'redirect'])->name('gmail.connect');
+Route::get('gmail/oauth/callback', [GmailAuthController::class, 'callback'])->name('gmail.callback');
+Route::delete('gmail/{gmailAccount}', [GmailAuthController::class, 'disconnect'])->name('gmail.disconnect');
+
+// Bank emails
+Route::get('bank-emails', [BankEmailController::class, 'index'])->name('bank-emails.index');
+Route::get('bank-emails/{bankEmail}', [BankEmailController::class, 'show'])->name('bank-emails.show');
+Route::post('bank-emails/fetch', [BankEmailController::class, 'fetch'])->name('bank-emails.fetch');
+Route::post('bank-emails/dispatch-fetch', [BankEmailController::class, 'dispatchFetch'])->name('bank-emails.dispatch-fetch');
+Route::post('bank-emails/{bankEmail}/parse', [BankEmailController::class, 'parse'])->name('bank-emails.parse');
+Route::post('bank-emails/{bankEmail}/ignore', [BankEmailController::class, 'ignore'])->name('bank-emails.ignore');
+
+// Bank transactions
+Route::get('bank-transactions', [BankTransactionController::class, 'index'])->name('bank-transactions.index');
+Route::get('bank-transactions/{bankTransaction}', [BankTransactionController::class, 'show'])->name('bank-transactions.show');
+Route::put('bank-transactions/{bankTransaction}', [BankTransactionController::class, 'update'])->name('bank-transactions.update');
+Route::post('bank-transactions/{bankTransaction}/approve', [BankTransactionController::class, 'approve'])->name('bank-transactions.approve');
+Route::post('bank-transactions/{bankTransaction}/reject', [BankTransactionController::class, 'reject'])->name('bank-transactions.reject');
+Route::post('bank-transactions/{bankTransaction}/convert', [BankTransactionController::class, 'convertToPurchase'])->name('bank-transactions.convert');
 
 Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
 Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
